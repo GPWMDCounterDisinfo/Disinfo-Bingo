@@ -556,50 +556,38 @@ h3 { font-size: 1.35em; }
     let bingoAnnounced = false;
     let winLine = [];
 
-    // ── Anonymous tactic tally ────────────────────────────────────────────────
-    // First flip of each tactic per card sends a bare +1 to a shared public
-    // counter (Abacus). The request carries nothing but the tactic name — no
-    // cookies, IDs, or player data. Writes are skipped on localhost so testing
-    // doesn't pollute the live tallies; reads still work everywhere.
-
-    const TALLY_BASE = 'https://abacus.jasoncameron.dev';
-    const TALLY_NS   = 'gpwmd-disinfo-bingo';
-    const tallyWritesEnabled = !['localhost', '127.0.0.1', ''].includes(location.hostname);
-
-    let countedLabels = new Set();
-
-    function tacticKey(label) {
-        return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-    }
-
-    function recordTactic(label) {
-        if (countedLabels.has(label)) return;
-        countedLabels.add(label);
-        logEvent('spot', label);
-        if (!tallyWritesEnabled) {
-            console.log('[tally] local preview — not sent:', tacticKey(label));
-            return;
-        }
-        fetch(`${TALLY_BASE}/hit/${TALLY_NS}/${tacticKey(label)}`).catch(() => {});
-    }
-
-    // ── Event log → your Google Sheet (optional) ──────────────────────────────
-    // Logs one anonymous row per event to a Google Sheet you own:
-    //   date/time | meeting being observed | event type | tactic
-    // Nothing about the player is sent or stored. To enable, follow the
-    // 5-minute setup in tracking-setup.md, then paste your Apps Script
-    // web-app URL below. Leave '' to disable.
+    // ── Results recording → Google Sheet ──────────────────────────────────────
+    // Only the final state of the board is recorded, and only when a player
+    // reaches Bingo: one anonymous record with date/time, the meeting being
+    // observed, the five winning tactics, and any other tactics still marked.
+    // Tiles clicked and unclicked along the way are never logged, and nothing
+    // about the player is sent or stored. Writes are skipped on localhost so
+    // testing doesn't pollute the data. See tracking-setup.md.
     const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxpEAFFzT_gIdYhhDi0Ok9KJYGHL3Bam2tMsc2IAJStK2ErTX7YiRLJje8QwRB4seXD/exec';
+    const sheetWritesEnabled = !['localhost', '127.0.0.1', ''].includes(location.hostname);
 
-    function logEvent(type, tactic) {
+    function recordBingo(lineIndices) {
         if (!SHEET_ENDPOINT) return;
-        const meeting = document.getElementById('meetingInput').value.trim();
-        if (!tallyWritesEnabled) {
-            console.log('[log] local preview — not sent:', { meeting, type, tactic });
+        const tiles = Array.from(grid.children);
+        const winSet = new Set(lineIndices);
+        const bingoTactics = lineIndices
+            .filter(i => i !== FREE_INDEX)
+            .map(i => tiles[i].dataset.label);
+        const otherTactics = tiles
+            .map((el, i) => i)
+            .filter(i => markedSet.has(i) && !winSet.has(i) && i !== FREE_INDEX)
+            .map(i => tiles[i].dataset.label);
+        const record = {
+            meeting: document.getElementById('meetingInput').value.trim(),
+            bingo:   bingoTactics.join('; '),
+            marked:  otherTactics.join('; ')
+        };
+        if (!sheetWritesEnabled) {
+            console.log('[record] local preview — not sent:', record);
             return;
         }
         // form-encoded body = a "simple" CORS request Apps Script accepts
-        const body = new URLSearchParams({ meeting, type, tactic });
+        const body = new URLSearchParams(record);
         fetch(SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body }).catch(() => {});
     }
 
@@ -672,7 +660,6 @@ h3 { font-size: 1.35em; }
         } else {
             el.classList.add('marked');
             markedSet.add(idx);
-            recordTactic(el.dataset.label);
             checkWin();
         }
     }
@@ -748,10 +735,7 @@ h3 { font-size: 1.35em; }
                 bingoAnnounced = true;
                 winLine = line;
                 line.forEach(i => tiles[i].classList.add('winner'));
-                logEvent('bingo', line
-                    .filter(i => i !== FREE_INDEX)
-                    .map(i => tiles[i].dataset.label)
-                    .join('; '));
+                recordBingo(line);
                 setTimeout(() => {
                     document.getElementById('shareGrid').innerHTML = buildShareGrid();
                     winModal.classList.add('active');
@@ -765,7 +749,6 @@ h3 { font-size: 1.35em; }
 
     function resetGame() {
         markedSet.clear();
-        countedLabels.clear();
         bingoAnnounced = false;
         winLine = [];
         winModal.classList.remove('active');
