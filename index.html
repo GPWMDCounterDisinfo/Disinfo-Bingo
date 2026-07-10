@@ -15,7 +15,7 @@ body {
 }
 
 h1, h2, h3 { font-family: "Work Sans", tahoma, sans-serif; }
-h2 { text-align: center; }
+h1, h2 { text-align: center; }
 h3 { font-size: 1.35em; }
 .modal-content h2 { font-size: 2em; }
 .modal-content p  { font-size: 1.25em; }
@@ -295,73 +295,17 @@ h3 { font-size: 1.35em; }
     border-color: #408746;
 }
 
-/* ── Results chart ────────────────────────── */
+/* ── Disclaimer ───────────────────────────── */
 
-.results-container {
-    max-width: 820px;
+.disclaimer {
+    max-width: 1010px;
     width: 100%;
     box-sizing: border-box;
-    margin: 0 auto 1em;
-}
-
-.results-note {
-    text-align: center;
-    font-size: 0.9em;
+    margin: 0.5em auto 1.5em;
+    padding: 0 5px;
+    font-size: 0.85em;
     color: #555;
-}
-
-.result-row {
-    display: grid;
-    grid-template-columns: minmax(150px, 250px) 1fr;
-    gap: 10px;
-    align-items: center;
-    padding: 4px 6px;
-    border-radius: 6px;
-}
-
-.result-row:hover { background-color: #F6F4F4; }
-
-.result-label {
-    font-size: 0.85em;
-    color: #222;
-    text-align: right;
-    line-height: 1.25;
-}
-
-.result-track {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-}
-
-.result-bar-wrap {
-    flex: 1;
-    min-width: 0;
-    border-left: 1px solid #e2e2e2; /* baseline */
-}
-
-.result-bar {
-    display: block;
-    height: 16px;
-    background-color: #408746;
-    border-radius: 0 4px 4px 0; /* square at baseline, rounded data end */
-}
-
-.result-value {
-    font-size: 0.85em;
-    color: #222;
-    font-variant-numeric: tabular-nums;
-    flex: 0 0 auto;
-}
-
-@media (max-width: 600px) {
-    .result-row {
-        grid-template-columns: 1fr;
-        gap: 3px;
-        padding: 6px;
-    }
-    .result-label { text-align: left; }
+    line-height: 1.5;
 }
 
 /* ── Buttons ──────────────────────────────── */
@@ -474,10 +418,22 @@ h3 { font-size: 1.35em; }
         <h2 id="winTitle">🎉 BINGO!</h2>
         <p>You spotted a line of disinformation tactics. Well done!</p>
         <div id="shareGrid" style="font-size:1.6em;letter-spacing:2px;margin:12px 0;line-height:1.5;"></div>
-        <button id="copyShareButton" class="styled-button" style="margin-bottom:8px;">Copy Results</button>
-        <span id="copiedMsg" style="display:none;font-size:0.85em;color:#408746;margin-left:8px;">Copied!</span>
+        <button id="copyShareButton" class="styled-button" style="margin-bottom:8px;">Share Results</button>
         <br/>
         <button id="modalResetButton" class="styled-button">Play Again</button>
+    </div>
+</div>
+
+<!-- ── How To Play Modal ──────────────────────────── -->
+<div id="howToPlayModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="howToPlayTitle">
+    <div class="modal-content">
+        <span class="close-button" id="closeHowToPlay" aria-label="Close">&times;</span>
+        <h2 id="howToPlayTitle">How to Play</h2>
+        <p style="text-align:left;">Disinformation about chemical, biological, radiological and nuclear (CBRN)
+        threats tends to use repetitive and predictable tactics to make false claims seem more persuasive.
+        Next time you are at a meeting discussing CBRN policy and anticipate potentially hearing false claims,
+        take out this Bingo card and circle every tactic you detect. If you spot all five tactics in a row,
+        column, or diagonal, that&rsquo;s Bingo!</p>
     </div>
 </div>
 
@@ -491,6 +447,7 @@ h3 { font-size: 1.35em; }
         <input type="text" id="meetingInput" placeholder="e.g. BWC Working Group, 79th UNGA First Committee" maxlength="120">
     </div>
     <div class="button-container">
+        <button id="howToPlayButton" class="styled-button">How to Play</button>
         <button id="scrambleButton" class="styled-button">Scramble Tiles</button>
         <button id="resetButton">Reset Board</button>
     </div>
@@ -500,91 +457,66 @@ h3 { font-size: 1.35em; }
     <!-- Grid items: data-label = tile face text, data-text = revealed back text -->
     <div class="grid-item" data-label="Allegations of Secrecy &amp; Neglect"          data-text="<strong>Allegations of Secrecy &amp; Neglect</strong><br>Claiming that certain states are not adequately transparent about their CBRN activities and/or not responsive to questions about those activities."></div>
     <div class="grid-item" data-label="Appeal to Emotions"                             data-text="<strong>Appeal to Emotions</strong><br>Evoking strong unpleasant feelings such as fear, anger, or sympathy to influence beliefs or actions."></div>
-    <div class="grid-item" data-label="Framing Opponents as Exploitative Colonizers"   data-text="<strong>Framing Opponents as Exploitative Colonizers</strong><br>Strategically framing an actor — usually a country in 'The West' — as an exploitative colonizer or hegemonic power pursuing their geopolitical interests at others' expense."></div>
+    <div class="grid-item" data-label="Framing Opponents as Exploitative Colonizers"   data-text="<strong>Framing Opponents as Exploitative Colonizers</strong><br>Strategically framing an actor — usually a country in ‘The West’ — as an exploitive colonizer or hegemonic power pursuing their geopolitical interests at others’ expense."></div>
     <div class="grid-item" data-label="Derogatory Name Calling"                        data-text="<strong>Derogatory Name Calling</strong><br>Using insulting or demeaning labels to discredit opponents and divert attention from facts."></div>
-    <div class="grid-item" data-label="Discrediting Opponents"                         data-text="<strong>Discrediting Opponents</strong><br>Harming the credibility and reputation of an opponent in the eyes of the international community and/or the disinformation spreader's domestic population."></div>
+    <div class="grid-item" data-label="Discrediting Opponents"                         data-text="<strong>Discrediting Opponents</strong><br>Harming the credibility and reputation of an opponent in the eyes of the international community and/or the disinformation spreader’s domestic population."></div>
     <div class="grid-item" data-label="Disregard for Rules &amp; Norms"               data-text="<strong>Disregard for Rules &amp; Norms</strong><br>Falsely alleging that a country or entity is disregarding or breaking rules, laws, or norms."></div>
-    <div class="grid-item" data-label="Distortion of Evidence"                         data-text="<strong>Distortion of Evidence</strong><br>Referencing 'evidence' that purportedly confirms false claims about CBRN threats, which can include materials that are deliberately misinterpreted and taken out of context or partially or fully fabricated."></div>
-    <div class="grid-item" data-label="Distraction &amp; Misdirection"                data-text="<strong>Distraction &amp; Misdirection</strong><br>Pointing to (real or falsely alleged) CBRN activity and threats to cause confusion, justify potential aggression, or direct attention away from potentially embarrassing events or a country's own CBRN activities."></div>
+    <div class="grid-item" data-label="Distortion of Evidence"                         data-text="<strong>Distortion of Evidence</strong><br>Referencing “evidence” that purportedly confirms false claims about CBRN threats, which can include materials that are deliberately misinterpreted and taken out of context or partially or fully fabricated."></div>
+    <div class="grid-item" data-label="Distraction &amp; Misdirection"                data-text="<strong>Distraction &amp; Misdirection</strong><br>Pointing to (real or falsely alleged) CBRN activity and threats, to cause confusion, justify potential aggression, or direct attention away from potentially embarrassing events or a country’s own CBRN activities."></div>
     <div class="grid-item" data-label="Fake Mirroring"                                 data-text="<strong>Fake Mirroring</strong><br>Accusing another state of what an actor has been accused of, and have likely done/are doing."></div>
     <div class="grid-item" data-label="False Allegations of WMD Use"                   data-text="<strong>False Allegations of WMD Use</strong><br>Falsely claiming that an actor used CBRN WMD, often by highlighting historical use."></div>
     <div class="grid-item" data-label="Flooding the Zone"                              data-text="<strong>Flooding the Zone with Confusing Information</strong><br>Overwhelming people with a large amount of information, causing confusion and making it difficult to distinguish between truth and falsehoods."></div>
-    <div class="grid-item" data-label="Framing an Aggressor as a Saviour"              data-text="<strong>Framing an Aggressor as a Saviour</strong><br>Commending an oppressive power's actions and framing them as necessary to ensure global peace and security, often to paint them as a responsible international actor and justify their aggression."></div>
+    <div class="grid-item" data-label="Framing an Aggressor as a Saviour"              data-text="<strong>Framing an Aggressor as a Saviour</strong><br>Commending an oppressive power’s actions and framing them as necessary to ensure global peace and security, often to paint them as a responsible international actor and justify their aggression."></div>
     <div class="grid-item free-space" data-label="FREE" data-text="FREE SPACE"></div>
     <div class="grid-item" data-label="Manipulating Risk/Threat Perception"            data-text="<strong>Manipulating Risk/Threat Perception</strong><br>Purposefully using language that intensifies risk perception and evokes fear, dread, and uncertainty to manipulate how people perceive a threat."></div>
     <div class="grid-item" data-label="Manipulative Tailoring to Specific Audiences"   data-text="<strong>Manipulative Tailoring to Specific Audiences</strong><br>Strategically manipulating how false narratives are framed so that they are especially persuasive with and tailored to specific audiences."></div>
     <div class="grid-item" data-label="Misrepresenting Peaceful Activities as Illicit" data-text="<strong>Misrepresenting Peaceful Activities as Illicit</strong><br>Questioning or attacking the legitimacy of clearly peaceful CBRN uses."></div>
     <div class="grid-item" data-label="Misuse of Scientific or Technical Information"  data-text="<strong>Misuse of Scientific or Technical Information</strong><br>Presenting inaccurate, irrelevant, or misconstrued scientific or technical information to substantiate false claims."></div>
     <div class="grid-item" data-label="Portraying States as Puppets"                   data-text="<strong>Portraying States and Organizations as Puppets</strong><br>Implying that a foreign power exercises control over a country or entity."></div>
-    <div class="grid-item" data-label="Referencing Past Atrocities"                    data-text="<strong>Referencing Past Atrocities</strong><br>Linking CBRN threats with historical disasters/atrocities to evoke a strong emotional response."></div>
-    <div class="grid-item" data-label="Undermining International Structures"           data-text="<strong>Undermining International Structures</strong><br>Portraying international structures, organizations, and conventions as being ineffective, weak, or developed exclusively by and for the 'West'."></div>
+    <div class="grid-item" data-label="Referencing Past Atrocities"                    data-text="<strong>Referencing Past Atrocities</strong><br>Linking CBRN threats with historical disasters/atrocities to evoke strong emotional response."></div>
+    <div class="grid-item" data-label="Undermining International Structures"           data-text="<strong>Undermining International Structures</strong><br>Portraying international structures, organizations, and conventions as being ineffective, weak, or developed exclusively by and for the ‘West’."></div>
     <div class="grid-item" data-label="Unfounded Accusations of Nefarious Activity"   data-text="<strong>Unfounded Accusations of Nefarious Activity</strong><br>Falsely portraying CBRN activities as suspicious or nefarious."></div>
     <div class="grid-item" data-label="Use of Misleading Photos"                       data-text="<strong>Use of Misleading Photos</strong><br>Legitimizing false claims using fake/altered photos or real ones taken out of context."></div>
-    <div class="grid-item" data-label='Using "Authoritative" Sources'                  data-text='<strong>Using "Authoritative" Sources</strong><br>Referencing seemingly authoritative sources to provide a false appearance of legitimacy or expert backing to claims. These sources may be fake, taken out of context, or have expertise in a separate area.'></div>
-    <div class="grid-item" data-label="Victim Framing"                                 data-text="<strong>Victim Framing</strong><br>An actor strategically portraying themselves as the victim of others' actions, often to justify their own actions."></div>
+    <div class="grid-item" data-label='Using “Authoritative” Sources'                  data-text='<strong>Using “Authoritative” Sources</strong><br>Referencing seemingly authoritative sources to provide a false appearance of legitimacy or expert backing to claims. These sources may be fake, taken out of context, or have expertise in a separate area.'></div>
+    <div class="grid-item" data-label="Victim Framing"                                 data-text="<strong>Victim Framing</strong><br>An actor strategically portraying themself as the victim of others’ actions, often to justify their own actions."></div>
     <div class="grid-item" data-label="Weaponizing Legal or Procedural Rules"          data-text="<strong>Weaponizing Legal or Procedural Rules</strong><br>Deliberately and disruptively manipulating formal rules during a multilateral proceeding, such as excessive use of rights of reply, obstruction, interruption, or time-wasting."></div>
 </div>
 
-<div class="text-container">
-    <div class="button-container">
-        <p>Download and print the bingo cards.</p>
-        <button class="styled-button"><a href="#">Card A</a></button>
-        <button class="styled-button"><a href="#">Card B</a></button>
-        <button class="styled-button"><a href="#">Card C</a></button>
-    </div>
-</div>
-
-<div class="text-container" id="resultsSection">
-    <h2>Most-Spotted Tactics</h2>
-    <p class="results-note">See which tactics players everywhere have spotted most often. Tallies are completely
-    anonymous &mdash; only the tactic is counted, never anything about the player or their board.</p>
-    <div class="button-container">
-        <button id="loadResultsButton" class="styled-button">Show Results</button>
-        <button id="downloadResultsButton" class="styled-button" style="display:none;">Download CSV</button>
-    </div>
-    <div class="results-container">
-        <div id="resultsChart" aria-live="polite"></div>
-    </div>
+<div class="disclaimer">
+    <p><strong>DISCLAIMER:</strong> Sometimes, it is hard to tell whether something you&rsquo;re reading or hearing is
+    actually disinformation. This game is a starting point to help you spot deceptive tactics. Confirming whether a
+    claim is disinformation requires further investigation. Not all listed tactics constitute disinformation on their
+    own, but can be used manipulatively within disinformation campaigns.</p>
 </div>
 
 <div class="background-container-beige">
     <div class="text-overlay">
-        <h3>Common Disinformation Tactics</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ut sagittis lectus, sed vulputate arcu. Fusce finibus feugiat tortor, non viverra mi semper tincidunt. Interdum. Add links as needed.</p>
+        <h3>What Does Each Tactic Mean?</h3>
         <ul>
-            <li><strong>Fabrication &amp; Manipulation:</strong>
-                <ul>
-                    <li><strong>Deepfakes/AI:</strong> Generating realistic fake audio, video, or images.</li>
-                    <li><strong>Cheapfakes:</strong> Editing real media (e.g., slowing down a video) to alter meaning.</li>
-                    <li><strong>Contextual Manipulation:</strong> Presenting real facts or images out of context to mislead (e.g., using old photos as current).</li>
-                </ul>
-            </li><br/>
-            <li><strong>Amplification &amp; Obfuscation:</strong>
-                <ul>
-                    <li><strong>Flooding:</strong> Overwhelming the information space with contradictory stories to cause confusion.</li>
-                    <li><strong>Bots &amp; Trolls:</strong> Using automated accounts or coordinated networks to boost false content.</li>
-                    <li><strong>Astroturfing:</strong> Creating fake grassroots movements to lend false credibility.</li>
-                </ul>
-            </li><br/>
-            <li><strong>Exploiting Psychology &amp; Bias:</strong>
-                <ul>
-                    <li><strong>Confirmation Bias:</strong> Crafting messages to appeal to pre-existing beliefs.</li>
-                    <li><strong>Emotional Appeals:</strong> Using fear, anger, or outrage to bypass critical thinking.</li>
-                    <li><strong>Filter Bubbles:</strong> Targeting specific groups within echo chambers.</li>
-                </ul>
-            </li><br/>
-            <li><strong>Discrediting &amp; Silencing:</strong>
-                <ul>
-                    <li><strong>Smearing:</strong> Attacking reliable sources (journalists, scientists) or individuals.</li>
-                    <li><strong>Impersonation:</strong> Faking legitimate sources or expert personas.</li>
-                </ul>
-            </li><br/>
-            <li><strong>Strategic Deception:</strong>
-                <ul>
-                    <li><strong>Cherry-Picking Data:</strong> Using selective data to support a false narrative (common in climate denial).</li>
-                    <li><strong>Planting False Narratives:</strong> Spreading outright lies or forged documents (like Operation Mincemeat).</li>
-                </ul>
-            </li>
+            <li><strong>Allegations of secrecy and/or neglect:</strong> Claiming that certain states are not adequately transparent about their CBRN activities and/or not responsive to questions about those activities.</li>
+            <li><strong>Appeal to emotions:</strong> Evoking strong unpleasant feelings such as fear, anger, or sympathy to influence beliefs or actions.</li>
+            <li><strong>Framing opponents as exploitative colonizers:</strong> Strategically framing an actor &mdash; usually a country in &lsquo;The West&rsquo; &mdash; as an exploitive colonizer or hegemonic power pursuing their geopolitical interests at others&rsquo; expense.</li>
+            <li><strong>Derogatory name calling:</strong> Using insulting or demeaning labels to discredit opponents and divert attention from facts.</li>
+            <li><strong>Discrediting opponents:</strong> Harming the credibility and reputation of an opponent in the eyes of the international community and/or the disinformation spreader&rsquo;s domestic population.</li>
+            <li><strong>Disregard for rules and norms:</strong> Falsely alleging that a country or entity is disregarding or breaking rules, laws, or norms.</li>
+            <li><strong>Distortion of evidence:</strong> Referencing &ldquo;evidence&rdquo; that purportedly confirms false claims about CBRN threats, which can include materials that are deliberately misinterpreted and taken out of context or partially or fully fabricated.</li>
+            <li><strong>Distraction and misdirection:</strong> Pointing to (real or falsely alleged) CBRN activity and threats, to cause confusion, justify potential aggression, or direct attention away from potentially embarrassing events or a country&rsquo;s own CBRN activities.</li>
+            <li><strong>Fake mirroring:</strong> Accusing another state of what an actor has been accused of, and have likely done/are doing.</li>
+            <li><strong>False allegations of WMD use:</strong> Falsely claiming that an actor used CBRN WMD, often by highlighting historical use.</li>
+            <li><strong>Flooding the zone with confusing information:</strong> Overwhelming people with a large amount of information, causing confusion and making it difficult to distinguish between truth and falsehoods.</li>
+            <li><strong>Framing an aggressor as a saviour:</strong> Commending an oppressive power&rsquo;s actions and framing them as necessary to ensure global peace and security, often to paint them as a responsible international actor and justify their aggression.</li>
+            <li><strong>Manipulating risk/threat perception:</strong> Purposefully using language that intensifies risk perception and evokes fear, dread, and uncertainty to manipulate how people perceive a threat.</li>
+            <li><strong>Manipulative tailoring to specific audiences:</strong> Strategically manipulating how false narratives are framed so that they are especially persuasive with and tailored to specific audiences.</li>
+            <li><strong>Misrepresenting peaceful activities as illicit:</strong> Questioning or attacking the legitimacy of clearly peaceful CBRN uses.</li>
+            <li><strong>Misuse of scientific or technical information:</strong> Presenting inaccurate, irrelevant, or misconstrued scientific or technical information to substantiate false claims.</li>
+            <li><strong>Portraying states and organizations as puppets:</strong> Implying that a foreign power exercises control over a country or entity.</li>
+            <li><strong>Referencing past atrocities:</strong> Linking CBRN threats with historical disasters/atrocities to evoke strong emotional response.</li>
+            <li><strong>Undermining international structures:</strong> Portraying international structures, organizations, and conventions as being ineffective, weak, or developed exclusively by and for the &lsquo;West&rsquo;.</li>
+            <li><strong>Unfounded accusations of nefarious activity:</strong> Falsely portraying CBRN activities as suspicious or nefarious.</li>
+            <li><strong>Use of misleading photos:</strong> Legitimizing false claims using fake/altered photos or real ones taken out of context.</li>
+            <li><strong>Using &ldquo;authoritative&rdquo; sources:</strong> Referencing seemingly authoritative sources to provide a false appearance of legitimacy or expert backing to claims. These sources may be fake, taken out of context, or have expertise in a separate area.</li>
+            <li><strong>Victim framing:</strong> An actor strategically portraying themself as the victim of others&rsquo; actions, often to justify their own actions.</li>
+            <li><strong>Weaponizing legal or procedural rules:</strong> Deliberately and disruptively manipulating formal rules during a multilateral proceeding, such as excessive use of rights of reply, obstruction, interruption, or time-wasting.</li>
         </ul>
         <br/><br/>
         <h3>BWC &amp; CWC Roadmap</h3>
@@ -634,10 +566,6 @@ h3 { font-size: 1.35em; }
     const TALLY_NS   = 'gpwmd-disinfo-bingo';
     const tallyWritesEnabled = !['localhost', '127.0.0.1', ''].includes(location.hostname);
 
-    const TACTIC_LABELS = Array.from(grid.querySelectorAll('.grid-item'))
-        .filter(el => !el.classList.contains('free-space'))
-        .map(el => el.dataset.label);
-
     let countedLabels = new Set();
 
     function tacticKey(label) {
@@ -674,74 +602,6 @@ h3 { font-size: 1.35em; }
         const body = new URLSearchParams({ meeting, type, tactic });
         fetch(SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, body }).catch(() => {});
     }
-
-    // ── Results chart ─────────────────────────────────────────────────────────
-
-    const resultsChart          = document.getElementById('resultsChart');
-    const loadResultsButton     = document.getElementById('loadResultsButton');
-    const downloadResultsButton = document.getElementById('downloadResultsButton');
-    let lastCounts = null;
-
-    function escapeHtml(s) {
-        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    async function loadResults() {
-        loadResultsButton.disabled = true;
-        loadResultsButton.textContent = 'Loading…';
-
-        const counts = await Promise.all(TACTIC_LABELS.map(async label => {
-            try {
-                const res  = await fetch(`${TALLY_BASE}/get/${TALLY_NS}/${tacticKey(label)}`);
-                const data = await res.json();
-                // a key that's never been hit comes back as an error — that's a 0
-                return { label, count: typeof data.value === 'number' ? data.value : 0, ok: res.ok || res.status === 404 };
-            } catch {
-                return { label, count: 0, ok: false };
-            }
-        }));
-
-        loadResultsButton.disabled = false;
-
-        if (counts.every(c => !c.ok)) {
-            resultsChart.innerHTML = '<p class="results-note">Couldn’t load results right now &mdash; please try again later.</p>';
-            loadResultsButton.textContent = 'Show Results';
-            return;
-        }
-
-        renderResults(counts);
-        lastCounts = counts;
-        downloadResultsButton.style.display = 'inline-block';
-        loadResultsButton.textContent = 'Refresh Results';
-    }
-
-    function renderResults(counts) {
-        counts.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
-        const max = Math.max(1, ...counts.map(c => c.count));
-        resultsChart.innerHTML = counts.map(({ label, count }) => `
-            <div class="result-row">
-                <span class="result-label">${escapeHtml(label)}</span>
-                <span class="result-track">
-                    <span class="result-bar-wrap"><span class="result-bar" style="width:${(count / max * 100).toFixed(1)}%"></span></span>
-                    <span class="result-value">${count.toLocaleString()}</span>
-                </span>
-            </div>`).join('');
-    }
-
-    loadResultsButton.addEventListener('click', loadResults);
-
-    downloadResultsButton.addEventListener('click', () => {
-        if (!lastCounts) return;
-        const rows = [['Tactic', 'Times spotted']]
-            .concat(lastCounts.map(c => [c.label, c.count]));
-        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
-        const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `disinfo-bingo-results-${new Date().toISOString().slice(0, 10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-    });
 
     // ── Info popup ────────────────────────────────────────────────────────────
 
@@ -857,11 +717,14 @@ h3 { font-size: 1.35em; }
         return header + '\n' + rows.join('\n') + '\nhttps://gpwmdcounterdisinfo.com';
     }
 
-    document.getElementById('copyShareButton').addEventListener('click', () => {
+    const copyShareButton = document.getElementById('copyShareButton');
+    let copiedTimer = null;
+    copyShareButton.addEventListener('click', () => {
         navigator.clipboard.writeText(shareText()).then(() => {
-            const msg = document.getElementById('copiedMsg');
-            msg.style.display = 'inline';
-            setTimeout(() => { msg.style.display = 'none'; }, 2000);
+            copyShareButton.style.minWidth = copyShareButton.offsetWidth + 'px'; // keep size while text swaps
+            copyShareButton.textContent = 'Copied!';
+            clearTimeout(copiedTimer);
+            copiedTimer = setTimeout(() => { copyShareButton.textContent = 'Share Results'; }, 2000);
         });
     });
 
@@ -965,6 +828,13 @@ h3 { font-size: 1.35em; }
     });
 
     // ── Wire up controls ──────────────────────────────────────────────────────
+
+    const howToPlayModal = document.getElementById('howToPlayModal');
+    document.getElementById('howToPlayButton').addEventListener('click', () => howToPlayModal.classList.add('active'));
+    document.getElementById('closeHowToPlay').addEventListener('click', () => howToPlayModal.classList.remove('active'));
+    howToPlayModal.addEventListener('click', e => {
+        if (e.target === howToPlayModal) howToPlayModal.classList.remove('active');
+    });
 
     document.getElementById('scrambleButton').addEventListener('click', scramble);
     document.getElementById('resetButton').addEventListener('click', resetGame);
