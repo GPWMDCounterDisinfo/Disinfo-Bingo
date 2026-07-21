@@ -14,9 +14,7 @@ body {
     font-family: "Work Sans", tahoma, sans-serif;
 }
 
-h1, h2, h3 { font-family: "Work Sans", tahoma, sans-serif; }
-h1, h2 { text-align: center; }
-h3 { font-size: 1.35em; }
+h2 { font-family: "Work Sans", tahoma, sans-serif; text-align: center; }
 .modal-content h2 { font-size: 2em; }
 .modal-content p  { font-size: 1.25em; }
 
@@ -28,26 +26,15 @@ h3 { font-size: 1.35em; }
     box-sizing: border-box;
 }
 
-.background-container-beige {
-    width: 100%;
-    background-color: #F6F4F4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* ── Compact header (so the board fits on screen at load) ──── */
+
+.header-container {
+    margin: 14px 1em 8px 1em;
 }
 
-.text-overlay {
-    padding: 10px;
-    max-width: 1200px;
-    width: 100%;
-    margin: 50px 1em 20px 1em;
-}
-
-.methodology {
-    font-size: .9em;
-    max-width: 1200px;
-    width: 95%;
-    margin: 3em 1em 20px 1em;
+.header-container .subtitle {
+    margin: 0 0 10px;
+    font-size: 0.95em;
 }
 
 /* ── Grid ─────────────────────────────────── */
@@ -57,7 +44,11 @@ h3 { font-size: 1.35em; }
     grid-template-columns: repeat(5, 1fr);
     gap: 5px;
     width: 100%;
-    max-width: 1010px;
+    /* the grid renders roughly square (5 rows of square tiles), so capping
+       max-width by remaining viewport height keeps the whole board on
+       screen at load, under the compact header, without a scroll */
+    max-width: min(1010px, calc(100vh - 250px));
+    max-width: min(1010px, calc(100svh - 250px));
     margin: 0 auto;
     padding: 0 5px;
     box-sizing: border-box;
@@ -72,6 +63,10 @@ h3 { font-size: 1.35em; }
     position: relative;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    /* lets the back text size itself off the tile's own width (cqw)
+       rather than the viewport's, so it tracks the tile even when the
+       grid is shrunk to fit short viewports */
+    container-type: inline-size;
 }
 
 .grid-item.free-space { cursor: default; }
@@ -115,23 +110,34 @@ h3 { font-size: 1.35em; }
     background-color: #193A1D;
     color: #fff;
     transform: rotateY(180deg);
-    font-size: clamp(0.6em, 1vw, 0.85em);
+    font-size: clamp(0.55em, 6.5cqw, 0.95em);
     font-weight: normal;
     align-items: flex-start;
     overflow-y: auto;
     padding: 12px;
+    /* styled scrollbar for the rare tile whose text still needs to scroll */
+    scrollbar-width: thin;
+    scrollbar-color: #9de0a5 rgba(255, 255, 255, 0.15);
 }
+
+.flip-card-back::-webkit-scrollbar { width: 6px; }
+.flip-card-back::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.12); border-radius: 8px; }
+.flip-card-back::-webkit-scrollbar-thumb {
+    background-color: #9de0a5;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.flip-card-back::-webkit-scrollbar-thumb:hover { background-color: #b9ecc0; }
 
 .flip-card-back a { color: #9de0a5; }
 
-/* desktop: show description, hide label */
-.back-label { display: none; }
+/* desktop: show both the tactic name and its description */
+.back-label { display: block; font-weight: bold; font-size: 1.15em; margin-bottom: 6px; }
 .back-desc  { display: block; }
 
 /* center back content both ways; auto margins collapse when
    content overflows, so long text stays scrollable from the top */
-.flip-card-back .back-label,
-.flip-card-back .back-desc { margin: auto; }
+.flip-card-back .back-content { margin: auto; width: 100%; }
 
 /* FREE space */
 .grid-item.free-space .flip-card-front {
@@ -267,7 +273,7 @@ h3 { font-size: 1.35em; }
 
 .meeting-container {
     text-align: center;
-    margin: 0 auto 1em;
+    margin: 0 auto 8px;
     max-width: 500px;
 }
 
@@ -275,12 +281,13 @@ h3 { font-size: 1.35em; }
     display: block;
     font-weight: bold;
     color: #193A1D;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    font-size: 0.9em;
 }
 
 #meetingInput {
     width: 100%;
-    padding: 12px 16px;
+    padding: 8px 14px;
     font-size: 1em;
     font-family: inherit;
     border: 2px solid #DAE8DB;
@@ -311,7 +318,7 @@ h3 { font-size: 1.35em; }
 /* ── Buttons ──────────────────────────────── */
 
 .button-container {
-    margin: 1em;
+    margin: 8px 1em 0;
     text-align: center;
 }
 
@@ -319,10 +326,10 @@ h3 { font-size: 1.35em; }
     background-color: #193A1D;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 10px 22px;
     text-align: center;
     display: inline-block;
-    font-size: 1em;
+    font-size: 0.95em;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
@@ -340,8 +347,8 @@ h3 { font-size: 1.35em; }
     background-color: #408746;
     border: none;
     color: white;
-    padding: 15px 32px;
-    font-size: 1em;
+    padding: 10px 22px;
+    font-size: 0.95em;
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
@@ -397,6 +404,13 @@ h3 { font-size: 1.35em; }
     }
 
     .modal-content { padding: 20px; }
+
+    .header-container .button-container .styled-button,
+    .header-container .button-container #resetButton {
+        font-size: 0.8em;
+        padding: 8px 14px;
+        margin: 3px 2px;
+    }
 }
     </style>
 </head>
@@ -438,10 +452,8 @@ h3 { font-size: 1.35em; }
 </div>
 
 <!-- ── Page Content ───────────────────────────────── -->
-<div class="text-container">
-    <h1>Disinfo Tactics Bingo</h1>
-    <br/>
-    <p style="text-align:center;"><strong>5 in a row, column, or diagonal is Bingo</strong></p>
+<div class="text-container header-container">
+    <p class="subtitle" style="text-align:center;"><strong>5 in a row, column, or diagonal is Bingo</strong></p>
     <div class="meeting-container">
         <label for="meetingInput">What meeting are you observing?</label>
         <input type="text" id="meetingInput" placeholder="e.g. BWC Working Group, 79th UNGA First Committee" maxlength="120">
@@ -487,50 +499,6 @@ h3 { font-size: 1.35em; }
     actually disinformation. This game is a starting point to help you spot deceptive tactics. Confirming whether a
     claim is disinformation requires further investigation. Not all listed tactics constitute disinformation on their
     own, but can be used manipulatively within disinformation campaigns.</p>
-</div>
-
-<div class="background-container-beige">
-    <div class="text-overlay">
-        <h3>What Does Each Tactic Mean?</h3>
-        <ul>
-            <li><strong>Allegations of secrecy and/or neglect:</strong> Claiming that certain states are not adequately transparent about their CBRN activities and/or not responsive to questions about those activities.</li>
-            <li><strong>Appeal to emotions:</strong> Evoking strong unpleasant feelings such as fear, anger, or sympathy to influence beliefs or actions.</li>
-            <li><strong>Framing opponents as exploitative colonizers:</strong> Strategically framing an actor &mdash; usually a country in &lsquo;The West&rsquo; &mdash; as an exploitive colonizer or hegemonic power pursuing their geopolitical interests at others&rsquo; expense.</li>
-            <li><strong>Derogatory name calling:</strong> Using insulting or demeaning labels to discredit opponents and divert attention from facts.</li>
-            <li><strong>Discrediting opponents:</strong> Harming the credibility and reputation of an opponent in the eyes of the international community and/or the disinformation spreader&rsquo;s domestic population.</li>
-            <li><strong>Disregard for rules and norms:</strong> Falsely alleging that a country or entity is disregarding or breaking rules, laws, or norms.</li>
-            <li><strong>Distortion of evidence:</strong> Referencing &ldquo;evidence&rdquo; that purportedly confirms false claims about CBRN threats, which can include materials that are deliberately misinterpreted and taken out of context or partially or fully fabricated.</li>
-            <li><strong>Distraction and misdirection:</strong> Pointing to (real or falsely alleged) CBRN activity and threats, to cause confusion, justify potential aggression, or direct attention away from potentially embarrassing events or a country&rsquo;s own CBRN activities.</li>
-            <li><strong>Fake mirroring:</strong> Accusing another state of what an actor has been accused of, and have likely done/are doing.</li>
-            <li><strong>False allegations of WMD use:</strong> Falsely claiming that an actor used CBRN WMD, often by highlighting historical use.</li>
-            <li><strong>Flooding the zone with confusing information:</strong> Overwhelming people with a large amount of information, causing confusion and making it difficult to distinguish between truth and falsehoods.</li>
-            <li><strong>Framing an aggressor as a saviour:</strong> Commending an oppressive power&rsquo;s actions and framing them as necessary to ensure global peace and security, often to paint them as a responsible international actor and justify their aggression.</li>
-            <li><strong>Manipulating risk/threat perception:</strong> Purposefully using language that intensifies risk perception and evokes fear, dread, and uncertainty to manipulate how people perceive a threat.</li>
-            <li><strong>Manipulative tailoring to specific audiences:</strong> Strategically manipulating how false narratives are framed so that they are especially persuasive with and tailored to specific audiences.</li>
-            <li><strong>Misrepresenting peaceful activities as illicit:</strong> Questioning or attacking the legitimacy of clearly peaceful CBRN uses.</li>
-            <li><strong>Misuse of scientific or technical information:</strong> Presenting inaccurate, irrelevant, or misconstrued scientific or technical information to substantiate false claims.</li>
-            <li><strong>Portraying states and organizations as puppets:</strong> Implying that a foreign power exercises control over a country or entity.</li>
-            <li><strong>Referencing past atrocities:</strong> Linking CBRN threats with historical disasters/atrocities to evoke strong emotional response.</li>
-            <li><strong>Undermining international structures:</strong> Portraying international structures, organizations, and conventions as being ineffective, weak, or developed exclusively by and for the &lsquo;West&rsquo;.</li>
-            <li><strong>Unfounded accusations of nefarious activity:</strong> Falsely portraying CBRN activities as suspicious or nefarious.</li>
-            <li><strong>Use of misleading photos:</strong> Legitimizing false claims using fake/altered photos or real ones taken out of context.</li>
-            <li><strong>Using &ldquo;authoritative&rdquo; sources:</strong> Referencing seemingly authoritative sources to provide a false appearance of legitimacy or expert backing to claims. These sources may be fake, taken out of context, or have expertise in a separate area.</li>
-            <li><strong>Victim framing:</strong> An actor strategically portraying themself as the victim of others&rsquo; actions, often to justify their own actions.</li>
-            <li><strong>Weaponizing legal or procedural rules:</strong> Deliberately and disruptively manipulating formal rules during a multilateral proceeding, such as excessive use of rights of reply, obstruction, interruption, or time-wasting.</li>
-        </ul>
-        <br/><br/>
-        <h3>BWC &amp; CWC Roadmap</h3>
-        <p>Paragraph summarizing our BWC &amp; CWC roadmap (sTactic image + text) to orient people to the bigger picture, and link them to roadmap briefs.</p>
-        <br/><br/>
-        <h3>Conclusion</h3>
-        <p>Concluding paragraph about actions/next steps/now what.</p>
-        <br/>
-    </div>
-</div>
-
-<div class="methodology">
-    <p><strong>Research &amp; Methodology</strong><br/>
-    A paragraph somewhere about the research from which this Bingo is derived, linking folks to any briefs we have about our methodology. Possibly also include copyrights, proposed citation of tool, etc.</p>
 </div>
 
 <script>
@@ -637,8 +605,10 @@ h3 { font-size: 1.35em; }
                 <div class="flip-card">
                     <div class="flip-card-front">${isFree ? logoImg : label}</div>
                     <div class="flip-card-back">${isFree ? logoImg : `
-                        <span class="back-label">${label}</span>
-                        <span class="back-desc">${text}</span>`}
+                        <div class="back-content">
+                            <span class="back-label">${label}</span>
+                            <span class="back-desc">${text}</span>
+                        </div>`}
                     </div>
                 </div>` +
                 (isFree ? '' : `<button class="info-btn" aria-label="More info: ${label}">i</button>`);
