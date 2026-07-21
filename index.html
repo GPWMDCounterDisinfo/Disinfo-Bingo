@@ -801,6 +801,23 @@ h2 { font-family: "Work Sans", tahoma, sans-serif; text-align: center; }
 
     // ── Init ──────────────────────────────────────────────────────────────────
     buildCard();
+
+    // ── Auto-resize when embedded in an iframe ─────────────────────────────────
+    // Tells the parent page our actual rendered height so it can size the
+    // iframe exactly, instead of the host having to guess a height (which
+    // causes an internal scrollbar whenever the guess comes up short). A
+    // no-op on the standalone page; harmless if the host doesn't listen.
+    if (window.parent !== window) {
+        const postHeight = () => {
+            window.parent.postMessage(
+                { type: 'disinfo-bingo-resize', height: document.documentElement.scrollHeight },
+                '*'
+            );
+        };
+        window.addEventListener('load', postHeight);
+        window.addEventListener('resize', postHeight);
+        new ResizeObserver(postHeight).observe(document.documentElement);
+    }
 })();
 </script>
 </body>
